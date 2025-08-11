@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moto Scroll</title>
+    <style>
+        body {
+        margin: 0;
+        }
+
+        div {
+        width: 100vw;
+        height: 100dvh;
+        object-fit: cover;
+        position: fixed;
+        background-size: cover;
+        background-position: center;
+        }
+
+        main {
+        height: 300dvh;
+        }
+        header {
+            background: linear-gradient(40deg, #ba3816, #a41705 40%);
+            width: 500px;
+            height: 500px;
+            border-radius: 1000px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            margin-top: -230px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            animation-name: slideInDown;
+            animation-duration: 1s;
+            animation-timing-function: ease-out;
+            
+            img {
+                width: 150px;
+                margin: 0 auto;
+                height: auto;
+                margin-bottom: 30px;
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translate3d(-50%, -100%, 0);
+                opacity: 0;
+            }
+            to {
+                transform: translate3d(-50%, 0, 0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <img src="/img/logo.png" alt="Ichivan - Your Way to Freedom">
+        </header>
+        <div id="img"></div>
+    </main>
+</body>
+<script type="module">
+    import { images } from './images.js';
+    const main = document.querySelector('main');
+    const img = document.querySelector('#img');
+    function updateImage(frame = 0){
+        //crear el id del nombre del archivo
+        const src = images[frame].p;
+        //actualizar imagen
+        //img.src = src;
+        img.style.backgroundImage = `url('${src}')`;
+    }
+
+    main.appendChild(img);
+    const MAX_FRAMES = 151;
+    let currentFrame = 0;
+    updateImage(currentFrame);
+    //altura maxima del scroll
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    let lastFrameUpdate = 0;
+
+    window.addEventListener('scroll', () => {
+        if(Date.now() - lastFrameUpdate < 10) return true;
+        //actualizar el tiempo del ultimo frame
+        lastFrameUpdate = Date.now();
+        //posicion actual del scroll
+        const scrollPosition = window.scrollY;
+        //calcular porcentaje del scroll
+        const scrollFraction = scrollPosition / maxScroll;
+        //frame actual
+        const frame = Math.floor(scrollFraction * MAX_FRAMES);
+
+        if(currentFrame != frame) {
+            updateImage(frame);
+            currentFrame = frame;
+        }
+        
+        updateImage(frame);
+    });
+</script>
+</html>
